@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin page</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div>
+
+
+        <% for(let i = 0; i < myData.length; i++) { %>
+            <form action="/delete" method="POST">
+                <div class="item">
+                    <p><%= myData[i].fullName %></p>
+                    <p><%= myData[i].education %></p>
+                    <img src="<%= myData[i].image %>" name="<%= myData[i].image %>"> 
+                    <input type="hidden" name="imgName" value="<%= myData[i].image %>">
+                    <button type="submit" style="margin-inline-start: auto;" value="<%= myData[i].id %>"  name="checkbox" >Remove profile</button>
+                    
+                </div>
+            </form>
+            
+        <% } %>
+
+        <% if(myData.length == 0) { %>
+        <form action="/admin" class="class" method="POST" enctype="multipart/form-data" name="newProfile">
+            <ul id="list">    
+                <input type="text" name="fullName" placeholder="Your full name"><br>
+                <input type="text" name="dateOfBirth" placeholder="Your date of birth"><br>
+                <input type="text" name="residence" placeholder="Your current residence"><br>
+                <input type="text" name="education" placeholder="Your education"><br>
+                <input type="text" name="dateOfGraduation" placeholder="Your date of graduation"><br>
+                <input type="text" name="technicalSkills" placeholder="Your technical skills"><br>
+                <input type="text" name="softSkills" placeholder="Your soft skills"><br>
+                <br>
+            </ul>
+            <input type="file" name="userFile">
+            <button type="submit">Submit a new</button>
+        </form>
+        <% } %>
+
+
+        <% for(let i = 0; i < myData.length; i++) { %>
+        <form action="/update" class="class" method="POST">
+            <ul id="list">    
+                <img src="<%= myData[i].image %>" name="<%= myData[i].image %>"> 
+                <input type="hidden" name="imgName" value="<%= myData[i].image %>">
+                <input type="text" name="fullName" value="<%= myData[i].fullName %>"><br>
+                <input type="text" name="dateOfBirth" value="<%= myData[i].dateOfBirth %>"><br>
+                <input type="text" name="residence" value="<%= myData[i].residence %>"><br>
+                <!--<input type="button" value="add to list" id="add">-->
+                <input type="text" name="education" value="<%= myData[i].education %>"><br>
+                
+                <input type="text" name="dateOfGraduation" value="<%= myData[i].dateOfGraduation %>"><br>
+                <input type="text" name="technicalSkills" value="<%= myData[i].technicalSkills %>"><br>
+                <input type="text" name="softSkills" value="<%= myData[i].softSkills %>"><br>
+                <br>
+            </ul>
+            <input type="file" name="userFile">
+            <button type="submit" style="margin-inline-start: auto;" value="<%= myData[i].id %>"  name="checkbox" >Update profile</button>
+        </form>
+        <% } %>
+    </div>
+    <!--<script>
+        document.getElementById("add").onclick = function(){
+            let text = document.getElementById("educationId").value;
+            let li = document.createElement('input');
+            li.type = "text";
+            li.name = "education";
+            li.placeholder = "add another item";
+            document.getElementById("list").appendChild(li);
+        }
+    </script>-->
+</body>
+</html>
