@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
+const passport = require('passport');
 require('../models/userInfo');
 const mongoData = mongoose.model('UserInfo');
+const User = require('../models/user');
 
 exports.getMainPage = (req, res) =>{
-    
 
     mongoData.find((error, userinfos) =>{
         if(!error){
@@ -14,15 +15,65 @@ exports.getMainPage = (req, res) =>{
     });
 };
 
-exports.getAdminPage = (req, res) => {
-    
-    mongoData.find((error, userinfos) =>{
-        if(!error){
-            res.render('admin.ejs', {myData: userinfos});
-        } else {
-            console.log(error);
-        }
+exports.getLoginPage = (req, res) => {
+    res.render('login.ejs');
+};
+
+exports.postLogin = (req, res) => {
+    const user = new User({
+        username: req.body.username,
+        password: req.body.password
     });
+
+    req.login(user, (error) => {
+        if(error){
+            console.log(error);
+            res.redirect('/login');
+        } else {
+            passport.authenticate('local')(req, res, ()=>{
+                console.log("redirecting to admin page");
+                res.redirect('/admin');
+            })
+        }
+    })
+}
+
+exports.getRegisterPage = (req, res) => {
+    res.render('register.ejs');
+}
+
+exports.postRegister = (req, res) => {
+    User.register({username: req.body.username}, req.body.password, (error, user) => {
+        if(error){
+            console.log(error);
+            res.redirect('/register')
+        } else {
+            passport.authenticate('local')(req, res, ()=>{
+                res.redirect('/admin');
+            })
+        }
+    })
+}
+
+exports.getAutorizationPage = (req, res) => {
+    res.render('authorize.ejs');
+}
+
+exports.getAdminPage = (req, res) => {
+    if(req.isAuthenticated()){
+        mongoData.find((error, userinfos) =>{
+            if(!error){
+                console.log(userinfos)
+                res.render('admin', {myData: userinfos});
+            } else {
+                console.log(error);
+            }
+        });
+    } else {
+        console.log("redirecting");
+        res.redirect('/login');
+    }
+    
 };
 
 exports.postNewData = (req, res) =>{
@@ -98,3 +149,9 @@ exports.updateData = (req, res) => {
         }
     })
 };
+
+exports.userLogout = (req, res)=>{
+    req.logout();
+    req.session.destroy();
+    res.redirect('/');
+}

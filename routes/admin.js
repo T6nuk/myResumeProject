@@ -23,4 +23,6 @@ router.post('/delete', userController.deleteData);
 
 router.post('/update', userController.updateData);
 
+router.get('/logout', userController.userLogout);
+
 module.exports = router;
